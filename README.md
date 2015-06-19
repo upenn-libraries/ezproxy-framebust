@@ -48,7 +48,7 @@ the protected resource within an iframe, without being prompted for authenticati
 credentials. 
 
 This solution works around the security concern mentioned above. But it *also*
-addresses the accessibility concern (by prompting invoking the login page as a
+addresses the accessibility concern (by invoking the login page as a
 top-level page). To put that another way: despite the comparative complexity of 
 the request sequence, from the user's perspective the system should intuitively 
 "just work" in the way that one would expect it to. 
