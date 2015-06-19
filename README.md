@@ -21,11 +21,12 @@ they attempted to do so irrespective of the security concern mentioned above.
 2. Call script from the `<head/>` element of your login page (for EZProxy, this 
 is most likely the `login.htm` page, whose source is located in the `docs` 
 directory). This is analogous to vanilla OWASP example mentioned in the next 
-section, but here we provide a `[backendHost]` argument.  The backend host 
-should be a special cooperating "redirect" server, whose sole purpose is as 
-a proxy-authenticated transient element of the login workflow, invoked transparently,
-and only for unauthenticated users making an initial resource access attempt 
-from a frame within an outer page:
+section, but here we provide a `[backendHost]` argument (e.g., `var backendHost =
+'http://127.0.0.1:8082/?redirect='`).  The backend host should be a special 
+cooperating "redirect" server, whose sole purpose is as a proxy-authenticated 
+transient element of the login workflow, invoked transparently, and only for 
+unauthenticated users making an initial resource access attempt from a frame 
+within an outer page:
 
 ```
 <style id="antiClickjack">body{display:none !important;}</style>
@@ -52,3 +53,9 @@ addresses the accessibility concern (by invoking the login page as a
 top-level page). To put that another way: despite the comparative complexity of 
 the request sequence, from the user's perspective the system should intuitively 
 "just work" in the way that one would expect it to. 
+
+### Custom EZProxy-specific query string manipulation
+EZProxy doesn't handle "url" query param values in a standard way, and in fact 
+can't handle properly escaped values in this field. So we need to accommodate 
+this and parse what's there, with a custom query string parser/pruner. 
+

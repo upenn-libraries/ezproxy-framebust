@@ -21,8 +21,5 @@
   "bugs": {
     "url": "https://github.com/upenn-libraries/ezproxy-framebust/issues"
   },
-  "homepage": "https://github.com/upenn-libraries/ezproxy-framebust#readme",
-  "dependencies": {
-    "lodash.keysin": "^3.0.8"
-  }
+  "homepage": "https://github.com/upenn-libraries/ezproxy-framebust#readme"
 }
