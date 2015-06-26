@@ -5,7 +5,7 @@ var conditionalRedirect = function conditionalRedirect(backendHost) {
   } else if (backendHost === undefined || backendHost === null) {
     top.location = self.location;
   } else {
-    top.location = constructRedirect(top.location.href, self.location.href, backendHost);
+    top.location = constructRedirect(document.referrer, self.location.href, backendHost);
   }
 };
 
