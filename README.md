@@ -20,13 +20,7 @@ they attempted to do so irrespective of the security concern mentioned above.
 1. Bundle this script, e.g., `browserify -r ezproxy-framebust > bundle.js`
 2. Call script from the `<head/>` element of your login page (for EZProxy, this 
 is most likely the `login.htm` page, whose source is located in the `docs` 
-directory). This is analogous to vanilla OWASP example mentioned in the next 
-section, but here we provide a `[backendHost]` argument (e.g., `var backendHost =
-'http://127.0.0.1:8082/?redirect='`).  The backend host should be a special 
-cooperating "redirect" server, whose sole purpose is as a proxy-authenticated 
-transient element of the login workflow, invoked transparently, and only for 
-unauthenticated users making an initial resource access attempt from a frame 
-within an outer page:
+directory):
 
 ```
 <style id="antiClickjack">body{display:none !important;}</style>
@@ -35,6 +29,33 @@ within an outer page:
   require('ezproxy-framebust').conditionalRedirect([backendHost]);
 </script>
 ```
+
+This is analogous to vanilla OWASP example mentioned in the next 
+section, but here we provide a `[backendHost]` argument (e.g., `var backendHost =
+'http://127.0.0.1:8082/?redirect='`).  The backend host should be a special 
+cooperating "redirect" server, whose sole purpose is as a proxy-authenticated 
+transient element of the login workflow, invoked transparently, and only for 
+unauthenticated users making an initial resource access attempt from a frame 
+within an enclosing page.
+
+For security reasons, you only want to allow this workflow to be initiated 
+from (and permit backend redirects to) specific whitelisted hosts. For instance,
+if your enclosing page is http://metasearch.library.college.edu, you will need
+to:
+
+1. Configure EZProxy to proxy your redirect server (password required), but to not 
+proxy the redirect `Location` HTTP header, using a `NeverProxy` resource configuration 
+directive, e.g.:
+
+```
+TITLE   Redirect Server
+URL     http://127.0.0.1:8082
+NeverProxy metasearch.library.college.edu
+```
+
+2. Whitelist redirects to http://metasearch.library.college.edu in the configuration
+of the backend server. For example, using [this simple redirect server](https://github.com/upenn-libraries/redirect-server)
+you would add http://metasearch.library.college.edu to the `validHosts.txt` file.
 
 ## Explanation
 Implements a variant of the approach suggested in the [OWASP 
