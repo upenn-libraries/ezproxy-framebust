@@ -22,7 +22,7 @@ they attempted to do so irrespective of the security concern mentioned above.
 is most likely the `login.htm` page, whose source is located in the `docs` 
 directory):
 
-```
+```html
 <style id="antiClickjack">body{display:none !important;}</style>
 <script type="text/javascript" src="bundle.js"></script>
 <script type="text/javascript">
