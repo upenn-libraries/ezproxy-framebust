@@ -38,7 +38,7 @@ transient element of the login workflow, invoked transparently, and only for
 unauthenticated users making an initial resource access attempt from a frame 
 within an enclosing page.
 
-For security reasons, you only want to allow this workflow to be initiated 
+For security reasons, you may only allow this workflow to be initiated 
 from (and permit backend redirects to) specific whitelisted hosts. For instance,
 if your enclosing page is http://metasearch.library.college.edu, you will need
 to:
@@ -56,6 +56,28 @@ NeverProxy metasearch.library.college.edu
 2. Whitelist redirects to http://metasearch.library.college.edu in the configuration
 of the backend server. For example, using [this simple redirect server](https://github.com/upenn-libraries/redirect-server)
 you would add http://metasearch.library.college.edu to the `validHosts.txt` file.
+
+#### Note about special (but relatively common) case
+If there is a need to proxy the enclosing page host under some circumstances
+(e.g., if the enclosing host must itself be proxied to allow off-campus access) direct use 
+of the `NeverProxy` directive would not be appropriate, since it is position-independent
+and prevents any named host from being ever proxied under any circumstances. This case
+may be addressed by configuring two transparent redirect servers:
+
+In step 1 above, rather than tailoring `NeverProxy` directives directly to each resource, 
+configure one catch-all `NeverProxy` directive specifying a special-purpose host (e.g., 
+neverproxy.library.college.edu). The redirect server listening at this host exists
+solely to break the client request flow free of EZProxy (as of 2015-10-06 there is no 
+position-dependent config option that will convince EZProxy to refrain from proxying a
+configured host that appears in an HTTP `Location` header; for further discussion, see 
+the EZProxy discussion forum: 
+[How to not proxy URLs in a request?](http://ls.suny.edu/read/messages?id=3335541)). 
+The "password-required" redirect server in this case passes the `redirect` query 
+parameter directly on (again as a query parameter) to this publicly-accessible
+special-purpose host, which subsequently redirects the client to the ultimate destination.
+The "wrapping" behavior of the "password-required" redirect server in this configuration
+is supported by configuring the `redirectPrefix` option of the
+[simple redirect server mentioned above](https://github.com/upenn-libraries/redirect-server)
 
 ## Explanation
 Implements a variant of the approach suggested in the [OWASP 
